@@ -1,33 +1,34 @@
-# FACEIT DevOps Challenge
+# DevOps Challenge
 
-You have been asked to create the infrastructure for running a web application on a cloud platform of your preference (Google Cloud Platform preferred, AWS or Azure are also fine).
 
-The [web application](test-app/README.md) can be found in the `test-app/` directory. Its only requirements are to be able to connect to a PostgreSQL database and perform PING requests.    
 
-The goal of the challenge is to demonstrate hosting, managing, documenting and scaling a production-ready system.
 
-This is not about website content or UI.
+# Architecture
 
-## Requirements
+![enter image description here](https://github.com/RichardChester/faceit_interview/blob/main/Untitled%20Diagram.drawio.png?raw=true)
+api gateway -> lambda -> database in private subnet
+## Scale
 
-- Deliver the tooling to set up the application using Terraform on the cloud platform of your choice (free tiers are fine)
-- Provide basic architecture diagrams and documentation on how to initialise the infrastructure along with any other documentation you think is appropriate
-- Provide and document a mechanism for scaling the service and delivering the application to a larger audience
-- Describe a possible solution for CI and/or CI/CD in order to release a new version of the application to production without any downtime
+it will scale at a near infinite level as a result of being deployed on lambda and api gateway
 
-Be prepared to explain your choices
+## Security
 
-## Extra Mile Bonus (not a requirement)
+Lambda is inherently secure due to it's limitations and APIGateway can be fitted with a myriad of AWS security services to bolster its already impressive security. Finally the fact the db sit's in a private subnet only accessible from inside the VPC protects all the data
 
-In addition to the above, time permitting, consider the following suggestions for taking your implementation a step further:
+## Running
 
-- Monitoring/Alerting
-- Implement CI/CD (github actions, travis, circleci, ...)
-- Security
+I provided a MAKEFILE
 
-## General guidance
+## CICD
 
-- We recommend using this repository as a starting point, you can clone it and add your code/docs to that repository
-- Please do no open pull request with your challenge against **this repository**
-- Submission of the challenge can be done either via your own public repository or zip file containing `.git` folder
+I'd use git hub actions and do the very standard plan and implement in conjunction with a feature -> dev -> master branch model
 
+## Monitor and Alert
+
+Grafana + Prometheus + Loki. Given that I've gone serverless with the compute the only real bottle neck would be the DB and so I would want to know when I was hitting my limits.
+
+## Final thoughts
+in a more real scenario I probably would have gone to the extra effort of setting up a connection pool and a serverless db to give me even greater scale and could potentially have even set up some basic monitoring with cloud watch in the infra repo. I would also have liked to have gone into a bit more detail in the CICD but this was already a very long test and as I don't really want to have to actually spin up actual infrastructure at my own expense for an interview (or really put the serious amount of time into mocking it) it would have been practically just sudo code anyway. 
+
+## Final final thoughts
+Please don't give this to any one else as a technical test it really doesn't work on multiple levels
